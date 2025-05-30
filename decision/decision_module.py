@@ -1,14 +1,17 @@
 import random
 
-class DecisionManager:
 
+class DecisionManager:
     """
     strategies
-    - PROPORTIONAL: If buy signal is higher, buy more
-    - FIXED: Always buys the same
+    - PROPORTIONAL: If buy signal is higher, buy more. Based on alpha variable
+    - FIXED_PERCENT: Always buys the same based on fixed_pct variable
     - RANDOM: Buys a random percent
+    - FIXED: True fixed
     """
-    def __init__(self, tp_min, tp_max, sl_min, sl_max, reserve=0.1, use_logs=True, strategy='PROPORTIONAL', alpha=0.5, fixed_pct=0.1):
+
+    def __init__(self, tp_min, tp_max, sl_min, sl_max, reserve=0.1, use_logs=True, strategy='PROPORTIONAL', alpha=0.5,
+                 fixed_pct=0.1, fixed=10000):
         self.tp_min = tp_min
         self.tp_max = tp_max
         self.sl_min = sl_min
@@ -18,6 +21,7 @@ class DecisionManager:
         self.strategy = strategy
         self.alpha = alpha
         self.fixed_pct = fixed_pct
+        self.fixed = fixed
 
     def decide_action(self, asset, predicted, current, liquidity, portfolio):
         expected_return = (predicted - current) / current
@@ -29,8 +33,10 @@ class DecisionManager:
             if self.strategy == 'PROPORTIONAL':
                 quantity = int((self.alpha * expected_return) * (max_liquidity // current))
                 quantity = max(quantity, 0)
-            elif self.strategy == 'FIXED':
+            elif self.strategy == 'FIXED_PERCENT':
                 quantity = int((self.fixed_pct * max_liquidity) // current)
+            elif self.strategy == 'FIXED':
+                quantity = int(self.fixed // current)
             elif self.strategy == 'RANDOM':
                 random_pct = random.uniform(0.05, 0.5)
                 quantity = int((random_pct * max_liquidity) // current)
