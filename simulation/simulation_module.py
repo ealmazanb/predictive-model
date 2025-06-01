@@ -94,7 +94,7 @@ class Simulator:
                 predicted_price = self.model.predict(past_data)
 
             else:
-                self.model.train(past_data, target_col=f"{asset}_feature_ma_10")
+                self.model.train(past_data, target_col=f"{asset}_value")
                 forecast = self.model.predict(horizon=1)
                 predicted_price = forecast.iloc[0]
 

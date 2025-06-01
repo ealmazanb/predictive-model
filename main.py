@@ -19,8 +19,8 @@ FILES_DIR = 'files'
 '''
 Config variables
 '''
-simulation_date_start = '2018-01-01'
-simulation_date_end = '2018-01-30'
+simulation_date_start = '2019-01-01'
+simulation_date_end = '2019-01-30'
 liquidity = 100_000
 reserve = 0.1
 tp_min = 0.01
@@ -96,6 +96,7 @@ Part II - Feature engineering
 '''
 feature_module = FeatureEngineeringModule(df)
 feature_module.apply_to_all_assets(assets)
+feature_module.scale_standard()
 feature_module.get_featured_data()
 df = feature_module.remove_na_rows()
 df.to_csv(f'{FILES_DIR}/full_dataset.csv', index=False)
